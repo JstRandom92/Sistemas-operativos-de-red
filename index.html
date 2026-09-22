@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>Sistemas Operativos de Red — Plataforma Educativa</title>
+  <meta name="description" content="Plataforma educativa sobre Sistemas Operativos de Red: conceptos, características, diseño curricular, tecnologías, comparativa, arquitectura de red, recursos y quiz interactivo.">
+  <meta name="author" content="Plataforma Educativa NOS">
+  <meta name="keywords" content="sistemas operativos de red, NOS, redes, administración de redes, Linux, Windows Server, DNS, DHCP, seguridad, virtualización">
+
+  <!-- Tema de color: claro u oscuro según preferencia guardada -->
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" id="metaThemeColor">
+  <script>
+    /* Aplica el tema (claro/oscuro) antes del primer pintado para evitar parpadeos.
+       Prioridad: preferencia guardada > prefers-color-scheme del sistema > claro. */
+    (function () {
+      try {
+        var saved = localStorage.getItem('nos-theme');
+        var theme = saved;
+        if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          theme = 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', theme || 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <!-- Open Graph básico -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sistemas Operativos de Red — Plataforma Educativa">
+  <meta property="og:description" content="Arquitectura, tecnologías y administración de redes modernas.">
+  <meta property="og:locale" content="es_ES">
+
+  <!-- Favicon monocromático en SVG embebido -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231A1A1A'/%3E%3Ccircle cx='10' cy='16' r='4' fill='none' stroke='%23FFFFFF' stroke-width='2'/%3E%3Ccircle cx='22' cy='10' r='4' fill='none' stroke='%23FFFFFF' stroke-width='2'/%3E%3Ccircle cx='22' cy='22' r='4' fill='none' stroke='%23FFFFFF' stroke-width='2'/%3E%3Cpath d='M13 15 L19 11 M13 17 L19 21' stroke='%23FFFFFF' stroke-width='2'/%3E%3C/svg%3E">
+
+  <!-- Hoja de estilos -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- Barra de progreso de lectura                                  -->
+  <!-- ============================================================ -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-bar__fill" id="readingProgress"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- Navegación superior fija                                      -->
+  <!-- ============================================================ -->
+  <header class="site-header" id="siteHeader">
+    <nav class="nav container" aria-label="Navegación principal">
+
+      <a href="#inicio" class="nav__brand" aria-label="Ir al inicio">
+        <img src="img/logo-institucion.jpeg" alt="Logo de la institución educativa" class="brand-logo" loading="eager">
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="22" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="22" cy="22" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M13 15 L19 11 M13 17 L19 21" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <span>NOS&nbsp;— Red</span>
+      </a>
+
+      <div class="nav__actions">
+        <!-- Conmutador de tema claro / oscuro -->
+        <button class="theme-toggle" id="themeToggle" type="button"
+                aria-pressed="false" aria-label="Cambiar a modo oscuro"
+                title="Cambiar entre modo claro y oscuro">
+          <svg class="theme-toggle__icon theme-toggle__moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          </svg>
+          <svg class="theme-toggle__icon theme-toggle__sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <!-- Menú hamburguesa (solo móvil) -->
+        <button class="nav__toggle" id="navToggle" type="button" aria-label="Abrir menú de navegación"
+                aria-expanded="false" aria-controls="navMenu">
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+        </button>
+      </div>
+
+      <!-- Lista de enlaces de navegación -->
+      <ul class="nav__menu" id="navMenu">
+        <li><a href="#inicio" class="nav__link is-active">Inicio</a></li>
+        <li><a href="#conceptos" class="nav__link">Conceptos</a></li>
+        <li><a href="#curricular" class="nav__link">Diseño curricular</a></li>
+        <li><a href="#tecnologias" class="nav__link">Tecnologías</a></li>
+        <li><a href="#comparativa" class="nav__link">Comparativa</a></li>
+        <li><a href="#recursos" class="nav__link">Recursos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- ============================================================ -->
+    <!-- 1. HERO / INICIO                                             -->
+    <!-- ============================================================ -->
+    <section class="hero section" id="inicio" aria-labelledby="heroTitle">
+      <div class="container hero__grid">
+
+        <!-- Texto del hero -->
+        <div class="hero__content">
+          <p class="hero__eyebrow">Plataforma educativa</p>
+          <h1 class="hero__title" id="heroTitle">Sistemas Operativos de Red</h1>
+          <p class="hero__subtitle">Arquitectura, tecnologías y administración de redes modernas.</p>
+          <p class="hero__intro">
+            Un sistema operativo de red es el software que coordina los recursos de una red
+            informática: gestiona usuarios, comparte archivos e impresoras, brinda servicios
+            (DNS, DHCP, web) y garantiza la seguridad del conjunto. Esta plataforma te guía
+            paso a paso por sus conceptos esenciales.
+          </p>
+          <div class="hero__actions">
+            <a href="#conceptos" class="btn btn--primary">Explorar contenidos</a>
+            <a href="#curricular" class="btn btn--ghost">Ver diseño curricular</a>
+          </div>
+        </div>
+
+        <!-- Representación visual abstracta de una red -->
+        <div class="hero__visual" role="img" aria-label="Representación abstracta de una red informática">
+          <svg viewBox="0 0 420 380" class="hero__svg" aria-hidden="true" focusable="false">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#1A1A1A"/>
+              </marker>
+            </defs>
+
+            <!-- Nodos interactivos (cada grupo muestra una descripción al pasar el puntero) -->
+            <g class="hero-node">
+              <title>Red central: núcleo que interconecta todos los equipos</title>
+              <circle cx="210" cy="190" r="46" fill="#1A1A1A"/>
+              <circle cx="210" cy="190" r="46" fill="none" stroke="#666666" stroke-width="1.5"/>
+              <text x="210" y="195" text-anchor="middle" fill="#FFFFFF" font-size="14" font-family="inherit">Red</text>
+            </g>
+
+            <g class="hero-node">
+              <title>Switch: conecta los equipos dentro de la red local</title>
+              <circle cx="60" cy="80" r="34" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="60" y="85" text-anchor="middle" fill="#1A1A1A" font-size="12" font-family="inherit">SW</text>
+            </g>
+            <g class="hero-node">
+              <title>Servidor web: publica sitios y aplicaciones (HTTP/HTTPS)</title>
+              <circle cx="360" cy="80" r="34" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="360" y="85" text-anchor="middle" fill="#1A1A1A" font-size="12" font-family="inherit">Web</text>
+            </g>
+            <g class="hero-node">
+              <title>Servidor DNS: traduce nombres de dominio en direcciones IP</title>
+              <circle cx="60" cy="300" r="34" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="60" y="305" text-anchor="middle" fill="#1A1A1A" font-size="12" font-family="inherit">DNS</text>
+            </g>
+            <g class="hero-node">
+              <title>Clientes: estaciones de trabajo que usan los servicios de la red</title>
+              <circle cx="360" cy="300" r="34" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="360" y="305" text-anchor="middle" fill="#1A1A1A" font-size="12" font-family="inherit">Cli</text>
+            </g>
+            <g class="hero-node">
+              <title>Firewall: filtra el tráfico no autorizado</title>
+              <circle cx="210" cy="60" r="28" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="210" y="65" text-anchor="middle" fill="#1A1A1A" font-size="11" font-family="inherit">FW</text>
+            </g>
+            <g class="hero-node">
+              <title>Servidor DHCP: asigna direcciones IP automáticamente</title>
+              <circle cx="210" cy="320" r="28" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="210" y="325" text-anchor="middle" fill="#1A1A1A" font-size="11" font-family="inherit">DHCP</text>
+            </g>
+
+            <!-- Enlaces -->
+            <line x1="60" y1="80" x2="192" y2="148" stroke="#666666" stroke-width="1.5"/>
+            <line x1="360" y1="80" x2="228" y2="148" stroke="#666666" stroke-width="1.5"/>
+            <line x1="60" y1="300" x2="192" y2="232" stroke="#666666" stroke-width="1.5"/>
+            <line x1="360" y1="300" x2="228" y2="232" stroke="#666666" stroke-width="1.5"/>
+            <line x1="210" y1="88" x2="210" y2="144" stroke="#666666" stroke-width="1.5"
+                  marker-end="url(#arrow)"/>
+            <line x1="210" y1="292" x2="210" y2="236" stroke="#666666" stroke-width="1.5"
+                  marker-end="url(#arrow)"/>
+            <line x1="94" y1="84" x2="182" y2="144" stroke="#E5E5E5" stroke-width="1"/>
+            <line x1="238" y1="144" x2="326" y2="84" stroke="#E5E5E5" stroke-width="1"/>
+            <line x1="94" y1="296" x2="182" y2="236" stroke="#E5E5E5" stroke-width="1"/>
+            <line x1="238" y1="236" x2="326" y2="296" stroke="#E5E5E5" stroke-width="1"/>
+
+            <!-- Pulsos animados -->
+            <circle cx="210" cy="190" r="10" fill="#FFFFFF" opacity="0.6">
+              <animate attributeName="r" values="10;52" dur="2.6s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0" dur="2.6s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Indicador de scroll -->
+      <a href="#conceptos" class="hero__scroll" aria-label="Bajar a la sección de conceptos">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 2. INTRODUCCIÓN / CONCEPTOS                                  -->
+    <!-- ============================================================ -->
+    <section class="section section--alt" id="conceptos" aria-labelledby="conceptosTitle">
+      <div class="container">
+
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Introducción</p>
+          <h2 class="section-title" id="conceptosTitle">Conceptos fundamentales</h2>
+          <p class="section-desc">
+            Qué es un sistema operativo de red, para qué sirve y en qué se diferencia de un
+            sistema operativo convencional.
+          </p>
+        </div>
+
+        <div class="concept-grid" data-reveal>
+
+          <article class="card card--feature">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2L3 6l9 4 9-4-9-4zM3 10l9 4 9-4M3 14l9 4 9-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              </span>
+              ¿Qué es?
+            </h3>
+            <p>
+              Un <strong>sistema operativo de red (NOS)</strong> es un software que integra
+              un sistema operativo con capacidades de red para coordinar, administrar y
+              compartir los recursos de múltiples equipos conectados. Permite gestionar
+              usuarios, archivos, impresoras y servicios de manera centralizada.
+            </p>
+          </article>
+
+          <article class="card card--feature">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v6M8.5 13L12 16l3.5-3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              ¿Para qué sirve?
+            </h3>
+            <p>
+              Centraliza la administración de la red: autentica usuarios, protege los datos,
+              comparte archivos y periféricos, brinda servicios esenciales (DNS, DHCP, web,
+              correo) y permite administrar los equipos de forma remota.
+            </p>
+          </article>
+
+          <article class="card card--feature">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 12h8M8 16h8M8 8h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </span>
+              Características
+            </h3>
+            <p>
+              Administración de usuarios y permisos, compartición de recursos, servicios de
+              red, seguridad y autenticación, monitoreo y administración remota son sus
+              capacidades más representativas, detalladas en la siguiente sección.
+            </p>
+          </article>
+
+          <article class="card card--feature">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="19" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </span>
+              Componentes
+            </h3>
+            <p>
+              Controlador de red, protocolos de comunicación, servicios de red, base de datos
+              de usuarios, controlador de dominio y herramientas de administración forman su
+              estructura esencial, explicada más abajo.
+            </p>
+          </article>
+        </div>
+
+        <!-- Diferencia entre SO convencional y NOS -->
+        <h3 class="block-title">SO convencional vs. SO de red</h3>
+        <div class="two-col" data-reveal>
+          <article class="card">
+            <h4 class="card__subtitle">Sistema operativo convencional</h4>
+            <ul class="list">
+              <li>Gestiona un único equipo o estación de trabajo.</li>
+              <li>El acceso a archivos y periféricos es local.</li>
+              <li>La seguridad abarca un solo usuario o máquina.</li>
+              <li>No ofrece servicios para otros equipos de forma nativa.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h4 class="card__subtitle">Sistema operativo de red</h4>
+            <ul class="list">
+              <li>Gestiona múltiples equipos interconectados.</li>
+              <li>Comparte archivos, impresoras y demás recursos en red.</li>
+              <li>Aplica políticas de seguridad, usuarios y permisos centralizadas.</li>
+              <li>Brinda servicios de red (DNS, DHCP, web, correo, etc.).</li>
+            </ul>
+          </article>
+        </div>
+
+        <!-- Componentes fundamentales -->
+        <h3 class="block-title">Componentes fundamentales</h3>
+        <div class="component-grid" data-reveal>
+          <div class="chip"><span class="chip__n">1</span>Controlador de interfaz de red</div>
+          <div class="chip"><span class="chip__n">2</span>Protocolos de comunicación (TCP/IP)</div>
+          <div class="chip"><span class="chip__n">3</span>Servicios de red</div>
+          <div class="chip"><span class="chip__n">4</span>Directorio de usuarios y contraseñas</div>
+          <div class="chip"><span class="chip__n">5</span>Controlador de dominio</div>
+          <div class="chip"><span class="chip__n">6</span>Herramientas de administración</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 3. CARACTERÍSTICAS PRINCIPALES                               -->
+    <!-- ============================================================ -->
+    <section class="section" id="caracteristicas" aria-labelledby="caracTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Características</p>
+          <h2 class="section-title" id="caracTitle">Características principales</h2>
+          <p class="section-desc">
+            Las capacidades que definen a un sistema operativo de red en entornos reales.
+          </p>
+        </div>
+
+        <div class="feat-grid" data-reveal>
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M2.5 20c.6-3.1 3-5 6.5-5s5.9 1.9 6.5 5M14.5 13.3c2.6 0 5 1.8 5.7 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Administración de usuarios</h3>
+            <p>Creación, modificación y eliminación centralizada de cuentas de usuario y grupos en toda la red.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><path d="M5 12h14M5 12l3-3M5 12l3 3M19 12l-3-3M19 12l-3 3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            <h3 class="card__title">Gestión de recursos compartidos</h3>
+            <p>Compartir carpetas, archivos e impresoras de forma controlada entre los equipos de la red.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7 8h2M7 11h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Administración de servidores</h3>
+            <p>Instalación, configuración y mantenimiento de servidores para cada servicio de la organización.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><path d="M5 11V9a7 7 0 0 1 14 0v2" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="11" width="17" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 14.5v3M10 17.5h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Seguridad y autenticación</h3>
+            <p>Protección del acceso mediante credenciales, políticas de contraseña y control de sesiones.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v4l-5 11a1 1 0 0 0 .9 1.5h12.2a1 1 0 0 0 .9-1.5L14 7V3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4.5 14h15" stroke="currentColor" stroke-width="1.7"/></svg>
+            <h3 class="card__title">Gestión de archivos</h3>
+            <p>Almacenamiento, organización y respaldo de datos en ubicaciones de red accesibles y seguras.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 12h18M7 5.5c1.7 1.5 3.3 4 3.3 6.5S8.7 17 7 18.5M17 5.5C15.3 7 13.7 9.5 13.7 12s1.6 5 3.3 6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Servicios de red</h3>
+            <p>Despliegue de DNS, DHCP, HTTP, FTP, SSH y otros servicios esenciales para la operación.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M2 20h20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 10v4M9 12h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Administración remota</h3>
+            <p>Gestión de equipos y servicios a distancia mediante SSH, escritorio remoto o paneles web.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><path d="M4 18l-2 3M20 18l2 3M5 14h14M7 10h10M9 6h6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 2l1.6 4.2L18 6l-3.8 3 1.4 4.7L12 11l-3.6 2.7 1.4-4.7L6 6l4.4-1.8L12 2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <h3 class="card__title">Control de permisos</h3>
+            <p>Asignación de niveles de acceso por usuario y grupo sobre archivos, carpetas y servicios.</p>
+          </article>
+
+          <article class="card card--feat">
+            <svg class="card--feat__icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 0 1 18 0" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 12a9 9 0 0 0 18 0M12 3v9l6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3" stroke="currentColor" stroke-width="1.7" opacity="0.5"/></svg>
+            <h3 class="card__title">Monitoreo de recursos</h3>
+            <p>Supervisión en tiempo real de CPU, memoria, ancho de banda y estado de los servicios.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 4. DISEÑO CURRICULAR                                         -->
+    <!-- ============================================================ -->
+    <section class="section section--alt" id="curricular" aria-labelledby="curricularTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Diseño curricular</p>
+          <h2 class="section-title" id="curricularTitle">Diseño Curricular</h2>
+        </div>
+
+        <!-- Objetivo general -->
+        <article class="card card--objective" data-reveal>
+          <h3 class="card__title">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3.5 2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            Objetivo general
+          </h3>
+          <p>
+            Desarrollar conocimientos sobre la instalación, configuración, administración y
+            seguridad de sistemas operativos utilizados en entornos de red.
+          </p>
+        </article>
+
+        <!-- Timeline de unidades -->
+        <div class="timeline" id="curriculumTimeline" data-reveal>
+
+          <!-- Unidad 1 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">1</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit1">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 1</span>
+                  <span class="unit__name">Introducción a los sistemas operativos de red</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit1" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Definir y diferenciar los conceptos de sistema operativo de red.</li>
+                      <li>Explicar la evolución histórica de los NOS.</li>
+                      <li>Comprender la arquitectura cliente-servidor.</li>
+                      <li>Distinguir sistemas centralizados y distribuidos.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>Conceptos fundamentales.</li>
+                      <li>Evolución de los NOS.</li>
+                      <li>Arquitectura cliente-servidor.</li>
+                      <li>Sistemas centralizados y distribuidos.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Diseñar mapas de red con roles cliente/servidor.</li>
+                      <li>Comparar NOS históricos y modernos.</li>
+                      <li>Identificar arquitecturas en casos reales.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Comprensión conceptual del entorno de red.</li>
+                      <li>Análisis de arquitecturas de red.</li>
+                      <li>Comunicación técnica del modelo cliente-servidor.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Unidad 2 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">2</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit2">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 2</span>
+                  <span class="unit__name">Administración de usuarios y recursos</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit2" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Administrar usuarios y grupos en un dominio.</li>
+                      <li>Aplicar permisos y políticas de acceso.</li>
+                      <li>Configurar recursos compartidos y sistemas de archivos.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>Usuarios y grupos.</li>
+                      <li>Permisos.</li>
+                      <li>Políticas de acceso.</li>
+                      <li>Recursos compartidos.</li>
+                      <li>Sistemas de archivos.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Crear y modificar cuentas de usuario.</li>
+                      <li>Configurar permisos sobre una carpeta compartida.</li>
+                      <li>Aplicar políticas de contraseña y caducidad.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Gestión segura de identidades.</li>
+                      <li>Control de acceso sobre recursos.</li>
+                      <li>Operación de sistemas de archivos de red.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Unidad 3 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">3</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit3">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 3</span>
+                  <span class="unit__name">Servicios de red</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit3" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Instalar y configurar servicios de red comunes.</li>
+                      <li>Resolver nombres con DNS y asignar direcciones con DHCP.</li>
+                      <li>Brindar servicios web, transferencia de archivos y acceso remoto.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>DNS.</li>
+                      <li>DHCP.</li>
+                      <li>HTTP/HTTPS.</li>
+                      <li>FTP/SFTP.</li>
+                      <li>SSH.</li>
+                      <li>Servicios de impresión y archivos.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Configurar un servidor DNS y DHCP.</li>
+                      <li>Publicar un sitio web HTTP local.</li>
+                      <li>Transferir archivos mediante SFTP y acceder por SSH.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Despliegue de servicios de red.</li>
+                      <li>Diagnóstico de resolución y asignación de direcciones.</li>
+                      <li>Operación de servicios de archivo e impresión.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Unidad 4 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">4</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit4">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 4</span>
+                  <span class="unit__name">Seguridad</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit4" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Aplicar autenticación y autorización en la red.</li>
+                      <li>Configurar control de acceso y firewalls.</li>
+                      <li>Implementar cifrado, copias de seguridad y auditoría.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>Autenticación.</li>
+                      <li>Autorización.</li>
+                      <li>Control de acceso.</li>
+                      <li>Firewalls.</li>
+                      <li>Cifrado.</li>
+                      <li>Copias de seguridad.</li>
+                      <li>Auditoría.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Diseñar reglas de firewall para servicios.</li>
+                      <li>Activar cifrado en conexiones remotas.</li>
+                      <li>Programar respaldos y revisar registros de auditoría.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Endurecimiento de servicios de red.</li>
+                      <li>Diseño de políticas de seguridad.</li>
+                      <li>Gestión de respaldos y trazabilidad.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Unidad 5 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">5</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit5">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 5</span>
+                  <span class="unit__name">Virtualización y tecnologías modernas</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit5" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Comprender máquinas virtuales y contenedores.</li>
+                      <li>Relacionar la virtualización con la nube.</li>
+                      <li>Introducir la automatización y administración remota.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>Máquinas virtuales.</li>
+                      <li>Contenedores.</li>
+                      <li>Virtualización de servidores.</li>
+                      <li>Computación en la nube.</li>
+                      <li>Automatización.</li>
+                      <li>Administración remota.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Crear y clonar una máquina virtual.</li>
+                      <li>Levantar un contenedor de un servicio simple.</li>
+                      <li>Automatizar tareas con scripts.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Operación de entornos virtualizados.</li>
+                      <li>Uso de contenedores básicos.</li>
+                      <li>Automatización de tareas administrativas.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Unidad 6 -->
+          <article class="unit">
+            <div class="unit__marker" aria-hidden="true">6</div>
+            <div class="unit__card card">
+              <button class="unit__toggle" type="button" aria-expanded="false" aria-controls="unit6">
+                <span class="unit__head">
+                  <span class="unit__label">Unidad 6</span>
+                  <span class="unit__name">Administración y monitoreo</span>
+                </span>
+                <svg class="unit__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="unit__body" id="unit6" hidden>
+                <div class="unit__grid">
+                  <div class="unit__col">
+                    <h4>Objetivos de aprendizaje</h4>
+                    <ul class="list">
+                      <li>Gestionar los recursos de la red de forma eficiente.</li>
+                      <li>Interpretar logs y monitorizar servicios.</li>
+                      <li>Diagnosticar y resolver problemas, y aplicar mantenimiento.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Contenidos</h4>
+                    <ul class="list">
+                      <li>Gestión de recursos.</li>
+                      <li>Logs.</li>
+                      <li>Monitoreo.</li>
+                      <li>Diagnóstico.</li>
+                      <li>Resolución de problemas.</li>
+                      <li>Mantenimiento preventivo.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Actividades prácticas</h4>
+                    <ul class="list">
+                      <li>Instalar una herramienta de monitoreo.</li>
+                      <li>Analizar logs para detectar fallas.</li>
+                      <li>Ejecutar un plan de mantenimiento preventivo.</li>
+                    </ul>
+                  </div>
+                  <div class="unit__col">
+                    <h4>Competencias adquiridas</h4>
+                    <ul class="list">
+                      <li>Supervisión continua de la red.</li>
+                      <li>Diagnóstico técnico y resolución.</li>
+                      <li>Planificación del mantenimiento.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 5. TECNOLOGÍAS UTILIZADAS                                    -->
+    <!-- ============================================================ -->
+    <section class="section" id="tecnologias" aria-labelledby="tecTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Tecnologías</p>
+          <h2 class="section-title" id="tecTitle">Tecnologías de los Sistemas Operativos de Red</h2>
+          <p class="section-desc">
+            Herramientas y estándares que dan vida a las redes modernas y su administración.
+          </p>
+        </div>
+
+        <div class="tech-grid" data-reveal>
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9679;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Linux</span>
+                <span class="tech__tag">Sistema operativo</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> familia de sistemas operativos libres basada en el núcleo Linux.</p>
+              <p><strong>Para qué se usa:</strong> como servidor web, DNS, DHCP, archivos, correo y virtualización.</p>
+              <p><strong>Escenarios:</strong> la mayoría de los servidores de Internet, centros de datos y nubes.</p>
+              <p><strong>Relación con la red:</strong> es la base de la administración de redes por su estabilidad y por herramientas de línea de comandos como <code>ip</code>, <code>ssh</code> y <code>systemctl</code>.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9632;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Windows Server</span>
+                <span class="tech__tag">Sistema operativo</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> plataforma de servidores de Microsoft para entornos corporativos.</p>
+              <p><strong>Para qué se usa:</strong> controladores de dominio, Active Directory, IIS, archivos y servicios de impresión.</p>
+              <p><strong>Escenarios:</strong> organizaciones con infraestructura basada en Microsoft.</p>
+              <p><strong>Relación con la red:</strong> centraliza usuarios, políticas y servicios mediante herramientas como Administrador del servidor y PowerShell.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9670;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Active Directory</span>
+                <span class="tech__tag">Directorio</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> servicio de directorio de Microsoft que organiza usuarios, equipos y políticas del dominio.</p>
+              <p><strong>Para qué se usa:</strong> autenticación centralizada, grupos, GPO y resolución de nombres de dominio.</p>
+              <p><strong>Escenarios:</strong> empresas con dominio Windows de varios equipos.</p>
+              <p><strong>Relación con la red:</strong> es el corazón de la administración de identidades y accesos en entornos Windows.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9678;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Samba</span>
+                <span class="tech__tag">Interoperabilidad</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> implementación libre de los protocolos SMB/CIFS.</p>
+              <p><strong>Para qué se usa:</strong> compartir archivos e impresoras entre Linux y Windows, y actuar como controlador de dominio.</p>
+              <p><strong>Escenarios:</strong> redes mixtas Linux/Windows.</p>
+              <p><strong>Relación con la red:</strong> permite a un servidor Linux ofrecer recursos compartidos nativos Windows.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9650;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">DNS</span>
+                <span class="tech__tag">Servicio de red</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> sistema que traduce nombres de dominio en direcciones IP.</p>
+              <p><strong>Para qué se usa:</strong> que los equipos localicen servicios y sitios por nombre.</p>
+              <p><strong>Escenarios:</strong> toda red con nombres de host o acceso a Internet.</p>
+              <p><strong>Relación con la red:</strong> su administración (BIND, dnsmasq o Windows DNS) es una tarea central del NOS.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9660;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">DHCP</span>
+                <span class="tech__tag">Servicio de red</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> protocolo que asigna direcciones IP y parámetros de red automáticamente.</p>
+              <p><strong>Para qué se usa:</strong> evitar la configuración manual y gestionar rangos, concesiones y reservas.</p>
+              <p><strong>Escenarios:</strong> redes de oficina, Wi-Fi y campus.</p>
+              <p><strong>Relación con la red:</strong> el servidor DHCP es un servicio básico que el administrador configura y supervisa.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9651;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">SSH</span>
+                <span class="tech__tag">Acceso remoto</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> protocolo seguro de acceso remoto a equipos.</p>
+              <p><strong>Para qué se usa:</strong> administrar servidores de forma cifrada y transferir archivos con SFTP/SCP.</p>
+              <p><strong>Escenarios:</strong> administración remota de servidores Linux/Unix y equipos de red.</p>
+              <p><strong>Relación con la red:</strong> es la vía principal del administrador para operar servidores sin presencia física.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9679;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">LDAP</span>
+                <span class="tech__tag">Directorio</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> protocolo para consultar y modificar directorios de información, como usuarios.</p>
+              <p><strong>Para qué se usa:</strong> autenticación centralizada y directorios corporativos (OpenLDAP o soporte de AD).</p>
+              <p><strong>Escenarios:</strong> autenticación central de aplicaciones y sistemas.</p>
+              <p><strong>Relación con la red:</strong> una única base de usuarios permite el acceso a múltiples servicios.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9636;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Docker</span>
+                <span class="tech__tag">Contenedores</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> plataforma para ejecutar aplicaciones en contenedores aislados.</p>
+              <p><strong>Para qué se usa:</strong> desplegar servicios (web, DNS, base de datos) de forma portátil y reproducible.</p>
+              <p><strong>Escenarios:</strong> desarrollo, CI/CD y microservicios.</p>
+              <p><strong>Relación con la red:</strong> simplifica el despliegue y la gestión de múltiples servicios de red.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9640;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Kubernetes</span>
+                <span class="tech__tag">Orquestación</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> sistema de orquestación de contenedores.</p>
+              <p><strong>Para qué se usa:</strong> automatizar despliegue, escalado y operación de aplicaciones contenedorizadas.</p>
+              <p><strong>Escenarios:</strong> clústeres de producción de gran escala.</p>
+              <p><strong>Relación con la red:</strong> gestiona el balanceo, el descubrimiento de servicios y las redes internas del clúster.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9641;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Virtualización</span>
+                <span class="tech__tag">Infraestructura</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> ejecución de múltiples sistemas operativos sobre un mismo hardware físico.</p>
+              <p><strong>Para qué se usa:</strong> consolidar servidores (VMware, Hyper-V, KVM) y probar entornos aislados.</p>
+              <p><strong>Escenarios:</strong> centros de datos y laboratorios de práctica.</p>
+              <p><strong>Relación con la red:</strong> cada máquina virtual actúa como un equipo más de la red con sus propias interfaces.</p>
+            </div>
+          </details>
+
+          <details class="tech card">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#9746;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">Cloud Computing</span>
+                <span class="tech__tag">Infraestructura</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> provisión de recursos informáticos bajo demanda a través de Internet.</p>
+              <p><strong>Para qué se usa:</strong> alojar servidores, bases de datos y aplicaciones sin hardware propio.</p>
+              <p><strong>Escenarios:</strong> IaaS, PaaS y SaaS en AWS, Azure o Google Cloud.</p>
+              <p><strong>Relación con la red:</strong> extiende la administración de un NOS a máquinas virtuales remotas en la nube.</p>
+            </div>
+          </details>
+
+          <details class="tech card tech--solid">
+            <summary class="tech__summary">
+              <span class="tech__icon" aria-hidden="true">&#926;</span>
+              <span class="tech__wrap">
+                <span class="tech__name">TCP/IP</span>
+                <span class="tech__tag">Protocolo</span>
+              </span>
+              <svg class="tech__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="tech__body">
+              <p><strong>Qué es:</strong> conjunto de protocolos base de Internet y de casi todas las redes modernas.</p>
+              <p><strong>Para qué se usa:</strong> direccionar, enrutar y transportar datos entre equipos de forma confiable.</p>
+              <p><strong>Escenarios:</strong> todas las redes TCP/IP, desde pequeñas LAN hasta internet.</p>
+              <p><strong>Relación con la red:</strong> todo NOS debe configurar interfaces, enrutamiento, DNS y servicios sobre TCP/IP.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 6. COMPARATIVA                                               -->
+    <!-- ============================================================ -->
+    <section class="section section--alt" id="comparativa" aria-labelledby="compTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Comparativa</p>
+          <h2 class="section-title" id="compTitle">Linux vs. Windows Server vs. Unix/BSD</h2>
+          <p class="section-desc">
+            Tabla comparativa de las principales plataformas usadas como sistema operativo de red.
+          </p>
+        </div>
+
+        <div class="table-wrap" data-reveal role="region" aria-label="Tabla comparativa de sistemas operativos de red" tabindex="0">
+          <table class="compare">
+            <caption class="visually-hidden">Comparación entre Linux, Windows Server y sistemas Unix/BSD como sistemas operativos de red.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Aspecto</th>
+                <th scope="col">Linux</th>
+                <th scope="col">Windows Server</th>
+                <th scope="col">Unix / BSD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Licenciamiento</th>
+                <td>Libre y de código abierto (GPL).</td>
+                <td>Propietario; licencias por núcleo o servidor.</td>
+                <td>Variado: BSD libre; Unix propietaria.</td>
+              </tr>
+              <tr>
+                <th scope="row">Administración</th>
+                <td>Por línea de comandos y archivos de configuración.</td>
+                <td>Asistida por herramientas gráficas y PowerShell.</td>
+                <td>Por línea de comandos y Shell/scripts.</td>
+              </tr>
+              <tr>
+                <th scope="row">Seguridad</th>
+                <td>Alta; permisos por usuario, SELinux/AppArmor.</td>
+                <td>Alta con configuración; parches y GPO.</td>
+                <td>Muy alta; diseño Unix tradicional, OpenBSD destaca.</td>
+              </tr>
+              <tr>
+                <th scope="row">Gestión de usuarios</th>
+                <td>Cuentas y grupos locales; LDAP/FreeIPA.</td>
+                <td>Active Directory como directorio estándar.</td>
+                <td>Archivo passwd, NIS/LDAP.</td>
+              </tr>
+              <tr>
+                <th scope="row">Servicios de red</th>
+                <td>Apache, BIND, DHCPd, vsftpd, OpenSSH, Postfix.</td>
+                <td>IIS, DNS Windows, DHCP, FTP y Exchange.</td>
+                <td>Apache, BIND, sendmail, OpenSSH.</td>
+              </tr>
+              <tr>
+                <th scope="row">Automatización</th>
+                <td>Bash, cron, Ansible, systemd.</td>
+                <td>PowerShell, Desired State Configuration.</td>
+                <td>Shell, cron, awk/sed, make.</td>
+              </tr>
+              <tr>
+                <th scope="row">Virtualización</th>
+                <td>KVM, QEMU, Docker y LXC.</td>
+                <td>Hyper-V, integración con Azure.</td>
+                <td>Bhyve, jails y contenedores (FreeBSD).</td>
+              </tr>
+              <tr>
+                <th scope="row">Uso habitual</th>
+                <td>Servidores web, nube, clusters y DevOps.</td>
+                <td>Corporativo, dominios, ERP y escritorios gestionados.</td>
+                <td>Firewall, DNS, correo y routers; alta estabilidad.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 7. ARQUITECTURA DE RED                                       -->
+    <!-- ============================================================ -->
+    <section class="section" id="arquitectura" aria-labelledby="arqTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Arquitectura</p>
+          <h2 class="section-title" id="arqTitle">Arquitectura de red típica</h2>
+          <p class="section-desc">
+            Flujo de una red empresarial: Internet → Router → Firewall → Switch → Servidores → Clientes.
+          </p>
+        </div>
+
+        <!-- Representación SVG de la arquitectura -->
+        <figure class="arch" data-reveal>
+          <svg class="arch__svg" id="archSvg" viewBox="0 0 960 640" role="group" aria-labelledby="archTitle archDesc" focusable="false">
+            <title id="archTitle">Arquitectura de red típica (diagrama interactivo)</title>
+            <desc id="archDesc">Diagrama interactivo: Internet conectado a un router, un firewall y un switch en la fila superior; debajo, la zona de servidores (DNS, DHCP, web y archivos) y la zona de clientes (estaciones de trabajo y administrador). Selecciona un elemento para ver su descripción.</desc>
+            <defs>
+              <marker id="archArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#666666"/>
+              </marker>
+            </defs>
+
+            <!-- Fila superior: Internet -> Router -> Firewall -> Switch -->
+            <g class="arch-node" data-arch="internet" tabindex="0" role="button" aria-label="Internet. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="20" y="40" width="140" height="90" rx="10" fill="#1A1A1A"/>
+              <text x="90" y="73" text-anchor="middle" fill="#FFFFFF" font-size="15" font-weight="bold">Internet</text>
+              <text x="90" y="93" text-anchor="middle" fill="#E5E5E5" font-size="11">Red externa</text>
+              <circle cx="60" cy="100" r="5" fill="#FFFFFF"><animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/></circle>
+            </g>
+
+            <g class="arch-node" data-arch="router" tabindex="0" role="button" aria-label="Router. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="250" y="40" width="150" height="90" rx="10" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="325" y="73" text-anchor="middle" fill="#1A1A1A" font-size="14" font-weight="bold">Router</text>
+              <text x="325" y="93" text-anchor="middle" fill="#666666" font-size="11">Enrutamiento / NAT</text>
+            </g>
+
+            <g class="arch-node" data-arch="firewall" tabindex="0" role="button" aria-label="Firewall. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="480" y="40" width="150" height="90" rx="10" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="555" y="72" text-anchor="middle" fill="#1A1A1A" font-size="14" font-weight="bold">Firewall</text>
+              <text x="555" y="93" text-anchor="middle" fill="#666666" font-size="11">Filtrado y control</text>
+            </g>
+
+            <g class="arch-node" data-arch="switch" tabindex="0" role="button" aria-label="Switch. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="710" y="40" width="150" height="90" rx="10" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="785" y="73" text-anchor="middle" fill="#1A1A1A" font-size="14" font-weight="bold">Switch</text>
+              <text x="785" y="93" text-anchor="middle" fill="#666666" font-size="11">Conmutación LAN</text>
+            </g>
+
+            <!-- Flechas de la fila superior -->
+            <line x1="160" y1="85" x2="248" y2="85" stroke="#666666" stroke-width="2" marker-end="url(#archArrow)"/>
+            <line x1="400" y1="85" x2="478" y2="85" stroke="#666666" stroke-width="2" marker-end="url(#archArrow)"/>
+            <line x1="630" y1="85" x2="708" y2="85" stroke="#666666" stroke-width="2" marker-end="url(#archArrow)"/>
+
+            <!-- Zona de SERVIDORES -->
+            <rect x="60" y="184" width="180" height="34" rx="17" fill="#1A1A1A"/>
+            <text x="150" y="206" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="bold">SERVIDORES</text>
+            <rect x="60" y="228" width="840" height="162" rx="12" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+
+            <g class="arch-node" data-arch="dns" tabindex="0" role="button" aria-label="Servidor DNS. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="84" y="258" width="185" height="70" rx="8" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="176" y="287" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Servidor DNS</text>
+              <text x="176" y="305" text-anchor="middle" fill="#666666" font-size="10.5">Resolución de nombres</text>
+            </g>
+            <g class="arch-node" data-arch="dhcp" tabindex="0" role="button" aria-label="Servidor DHCP. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="291" y="258" width="185" height="70" rx="8" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="383" y="287" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Servidor DHCP</text>
+              <text x="383" y="305" text-anchor="middle" fill="#666666" font-size="10.5">Asignación de IP</text>
+            </g>
+            <g class="arch-node" data-arch="web" tabindex="0" role="button" aria-label="Servidor web. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="498" y="258" width="185" height="70" rx="8" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="590" y="287" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Servidor web</text>
+              <text x="590" y="305" text-anchor="middle" fill="#666666" font-size="10.5">HTTP / HTTPS</text>
+            </g>
+            <g class="arch-node" data-arch="archivos" tabindex="0" role="button" aria-label="Servidor de archivos. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="705" y="258" width="185" height="70" rx="8" fill="#F5F5F5" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="797" y="287" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Servidor de archivos</text>
+              <text x="797" y="305" text-anchor="middle" fill="#666666" font-size="10.5">Carpetas compartidas</text>
+            </g>
+
+            <!-- Zona de CLIENTES Y ADMINISTRACIÓN -->
+            <rect x="230" y="414" width="340" height="34" rx="17" fill="#1A1A1A"/>
+            <text x="400" y="436" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="bold">CLIENTES Y ADMINISTRACIÓN</text>
+            <rect x="230" y="458" width="500" height="142" rx="12" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+
+            <g class="arch-node" data-arch="clientes" tabindex="0" role="button" aria-label="Clientes. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="262" y="488" width="210" height="70" rx="8" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="367" y="517" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Clientes</text>
+              <text x="367" y="535" text-anchor="middle" fill="#666666" font-size="10.5">Estaciones de trabajo</text>
+            </g>
+            <g class="arch-node" data-arch="admin" tabindex="0" role="button" aria-label="Administrador de red. Activar para ver la descripción.">
+              <rect class="arch-node-frame" x="488" y="488" width="210" height="70" rx="8" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="593" y="517" text-anchor="middle" fill="#1A1A1A" font-size="13" font-weight="bold">Administrador</text>
+              <text x="593" y="535" text-anchor="middle" fill="#666666" font-size="10.5">Gestión y monitoreo</text>
+            </g>
+
+            <!-- Conexiones verticales entre zonas (sin cruces) -->
+            <line x1="785" y1="130" x2="785" y2="226" stroke="#666666" stroke-width="2" marker-end="url(#archArrow)"/>
+            <line x1="620" y1="390" x2="620" y2="456" stroke="#666666" stroke-width="2" marker-end="url(#archArrow)"/>
+          </svg>
+
+          <!-- Panel de información del diagrama interactivo -->
+          <p class="arch__hint">Diagrama interactivo: pulsa un elemento (o enfócalo con el teclado y pulsa Intro) para ver su descripción.</p>
+          <div class="arch-info" id="archInfo" role="status" aria-live="polite">
+            <p class="arch-info__title" id="archInfoTitle">Explora la arquitectura</p>
+            <p class="arch-info__text" id="archInfoText">Selecciona cualquier elemento del diagrama para ver qué función cumple en la red.</p>
+          </div>
+        </figure>
+
+        <div class="chip-row" data-reveal>
+          <div class="chip"><span class="chip__n" aria-hidden="true">&#9679;</span>Router: delimita la red y da salida a Internet.</div>
+          <div class="chip"><span class="chip__n" aria-hidden="true">&#9632;</span>Firewall: filtra el tráfico no autorizado.</div>
+          <div class="chip"><span class="chip__n" aria-hidden="true">&#9670;</span>Switch: conecta servidores y clientes en la LAN.</div>
+          <div class="chip"><span class="chip__n" aria-hidden="true">&#9650;</span>Servidores: brindan servicios centralizados.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 8. VENTAJAS Y DESAFÍOS                                       -->
+    <!-- ============================================================ -->
+    <section class="section section--alt" id="ventajas" aria-labelledby="ventTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Análisis</p>
+          <h2 class="section-title" id="ventTitle">Ventajas y desafíos</h2>
+        </div>
+
+        <div class="two-col two-col--split" data-reveal>
+
+          <article class="card card--pros">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 13l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              Ventajas
+            </h3>
+            <ul class="list list--check">
+              <li>Administración centralizada de usuarios, equipos y políticas.</li>
+              <li>Compartición de recursos: archivos, impresoras y aplicaciones.</li>
+              <li>Seguridad organizada mediante autenticación y permisos.</li>
+              <li>Escalabilidad: crece junto con la organización.</li>
+              <li>Administración remota sin desplazarse.</li>
+              <li>Automatización de tareas repetitivas.</li>
+            </ul>
+          </article>
+
+          <article class="card card--cons">
+            <h3 class="card__title">
+              <span class="card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </span>
+              Desafíos
+            </h3>
+            <ul class="list list--cross">
+              <li>Complejidad administrativa en redes grandes.</li>
+              <li>Configuración de seguridad que exige criterio.</li>
+              <li>Mantenimiento y actualización continua.</li>
+              <li>Dependencia de la infraestructura de red.</li>
+              <li>Necesidad de conocimientos especializados.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 9. RECURSOS EDUCATIVOS                                       -->
+    <!-- ============================================================ -->
+    <section class="section" id="recursos" aria-labelledby="recTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Recursos</p>
+          <h2 class="section-title" id="recTitle">Recursos educativos</h2>
+          <p class="section-desc">
+            Glosario interactivo, comandos útiles, buenas prácticas y preguntas frecuentes.
+          </p>
+        </div>
+
+        <!-- Glosario interactivo -->
+        <div class="rec-block">
+          <h3 class="block-title">Glosario interactivo</h3>
+          <div class="glossary" data-reveal>
+            <label class="field-label" for="glossarySearch">Buscar término</label>
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input type="search" id="glossarySearch" class="search-box__input"
+                     placeholder="Ej: DNS, firewall, DHCP…" autocomplete="off">
+            </div>
+            <p class="glossary__empty" id="glossaryEmpty" hidden>No se encontraron términos. Prueba con otra palabra.</p>
+            <dl class="glossary__list" id="glossaryList">
+
+              <div class="glossary__item">
+                <dt>Active Directory</dt>
+                <dd>Servicio de directorio de Microsoft para gestionar usuarios, equipos y políticas de un dominio.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Autenticación</dt>
+                <dd>Proceso de verificar la identidad de un usuario mediante credenciales.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Autorización</dt>
+                <dd>Determinación de los recursos que un usuario autenticado puede usar.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Cliente</dt>
+                <dd>Equipo o aplicación que solicita servicios a un servidor en la red.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Contenedor</dt>
+                <dd>Unidad de software que empaqueta una aplicación y sus dependencias para ejecutarse de forma aislada.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Controlador de dominio</dt>
+                <dd>Servidor que centraliza la autenticación y las políticas del dominio.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>DHCP</dt>
+                <dd>Protocolo que asigna automáticamente direcciones IP y parámetros de red a los equipos.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>DNS</dt>
+                <dd>Sistema que traduce nombres de dominio en direcciones IP.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Firewall</dt>
+                <dd>Dispositivo o software que filtra el tráfico según reglas de seguridad.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>LDAP</dt>
+                <dd>Protocolo para acceder y gestionar directorios de información, como cuentas de usuario.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Máquina virtual</dt>
+                <dd>Simulación por software de una computadora completa sobre un hardware real.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>NOS</dt>
+                <dd>Sigla de Network Operating System, sistema operativo orientado a la administración de redes.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Permiso</dt>
+                <dd>Regla que define si un usuario puede leer, escribir o ejecutar un recurso.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Samba</dt>
+                <dd>Implementación libre de los protocolos SMB/CIFS para interoperar con redes Windows.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Servidor</dt>
+                <dd>Equipo o software que ofrece servicios y recursos al resto de la red.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>SSH</dt>
+                <dd>Protocolo seguro para administrar equipos de forma remota con cifrado.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>TCP/IP</dt>
+                <dd>Conjunto de protocolos base que permite la comunicación en Internet y en la mayoría de las redes.</dd>
+              </div>
+              <div class="glossary__item">
+                <dt>Virtualización</dt>
+                <dd>Técnica que permite ejecutar varios sistemas operativos sobre el mismo hardware.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        <!-- Comandos -->
+        <div class="rec-block commands">
+          <div class="two-col" data-reveal>
+            <article class="card card--code">
+              <h3 class="card__title">Comandos básicos de Linux</h3>
+              <pre class="code">useradd -m &lt;usuario&gt;   <span>crear usuario</span>
+passwd &lt;usuario&gt;            <span>fijar contraseña</span>
+groupadd &lt;grupo&gt;           <span>crear grupo</span>
+chmod 750 &lt;archivo&gt;        <span>permisos</span>
+chown usuario:grupo f       <span>propietario</span>
+ip addr show                <span>ver interfaces</span>
+systemctl start &lt;serv&gt;     <span>iniciar servicio</span>
+ss -tlnp                    <span>puertos en escucha</span></pre>
+            </article>
+            <article class="card card--code">
+              <h3 class="card__title">Comandos básicos de Windows Server</h3>
+              <pre class="code">New-ADUser -Name &lt;usuario&gt;  <span>crear usuario AD</span>
+Set-ADGroup -Add &lt;grupo&gt;     <span>agregar a grupo</span>
+Get-Service &lt;servicio&gt;      <span>estado de servicio</span>
+Restart-Service &lt;servicio&gt;  <span>reiniciar servicio</span>
+ipconfig /all                <span>configuración IP</span>
+Get-EventLog System          <span>ver registros</span>
+whoami                       <span>usuario actual</span>
+sconfig                      <span>configuración pc</span></pre>
+            </article>
+          </div>
+        </div>
+
+        <!-- Buenas prácticas -->
+        <div class="rec-block">
+          <h3 class="block-title">Buenas prácticas de seguridad</h3>
+          <ol class="steps" data-reveal>
+            <li><span class="steps__n">1</span> Mantén los sistemas y parches actualizados.</li>
+            <li><span class="steps__n">2</span> Usa contraseñas fuertes y políticas de caducidad.</li>
+            <li><span class="steps__n">3</span> Aplica el principio de mínimo privilegio.</li>
+            <li><span class="steps__n">4</span> Cifra las conexiones remotas (SSH/HTTPS).</li>
+            <li><span class="steps__n">5</span> Configura firewalls y segmenta la red.</li>
+            <li><span class="steps__n">6</span> Implementa copias de seguridad periódicas y verificadas.</li>
+            <li><span class="steps__n">7</span> Audita registros y revisa accesos de forma habitual.</li>
+            <li><span class="steps__n">8</span> Desactiva servicios y cuentas que no se utilicen.</li>
+          </ol>
+        </div>
+
+        <!-- Preguntas frecuentes -->
+        <div class="rec-block">
+          <h3 class="block-title">Preguntas frecuentes</h3>
+          <div class="faq" data-reveal>
+            <details class="faq__item card">
+              <summary>
+                ¿Qué sistema operativo de red es mejor para empezar?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>Linux es la mejor puerta de entrada: es libre, documentado y es la base de la mayoría de los servidores. Windows Server es recomendable si el entorno corporativo es de Microsoft.</p>
+            </details>
+
+            <details class="faq__item card">
+              <summary>
+                ¿Es lo mismo un sistema operativo de red y un sistema operativo distribuido?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>No. Un NOS coordina recursos en red manteniendo equipos independientes. Un sistema distribuido pretende que los equipos funcionen como un único sistema ante el usuario.</p>
+            </details>
+
+            <details class="faq__item card">
+              <summary>
+                ¿El DNS es un servicio que administra el sistema operativo de red?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>Sí. El NOS instala, configura y supervisa el servidor DNS para que los equipos resuelvan nombres dentro y fuera de la red.</p>
+            </details>
+
+            <details class="faq__item card">
+              <summary>
+                ¿Qué diferencia hay entre un usuario local y un usuario de dominio?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>El usuario local solo existe en su equipo. El usuario de dominio se autentica de forma centralizada y puede acceder a recursos de toda la red según sus permisos.</p>
+            </details>
+
+            <details class="faq__item card">
+              <summary>
+                ¿Los contenedores reemplazan la virtualización?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>No exactamente. Los contenedores comparten el núcleo del host y son más ligeros, mientras que las máquinas virtuales incluyen su propio sistema operativo. Ambas coexisten en los entornos modernos.</p>
+            </details>
+
+            <details class="faq__item card">
+              <summary>
+                ¿Necesito conocimientos previos para estudiar NOS?
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <p>Es recomendable conocer fundamentos de redes (IP, DNS, protocolos) y administración básica de un sistema operativo, temas que esta misma plataforma aborda.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 10. QUIZ INTERACTIVO                                         -->
+    <!-- ============================================================ -->
+    <section class="section section--alt" id="quiz" aria-labelledby="quizTitle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="section-eyebrow">Evaluación</p>
+          <h2 class="section-title" id="quizTitle">Quiz interactivo</h2>
+          <p class="section-desc">
+            Pon a prueba tus conocimientos. Responde las 12 preguntas y obtén tu puntaje final.
+          </p>
+        </div>
+
+        <div class="quiz card" id="quizApp" data-reveal>
+
+          <!-- Panel de inicio -->
+          <div class="quiz__panel" id="quizStart" aria-live="polite">
+            <p class="quiz__intro">
+              Este cuestionario cubre definiciones, servicios de red, seguridad y tecnologías de
+              los sistemas operativos de red. Responderás una pregunta a la vez y recibirás
+              retroalimentación inmediata.
+            </p>
+            <button type="button" class="btn btn--primary" id="quizStartBtn">Comenzar el quiz</button>
+          </div>
+
+          <!-- Panel de preguntas -->
+          <div class="quiz__panel" id="quizPanel" hidden>
+            <div class="quiz__meta">
+              <p class="quiz__progress" id="quizProgress" aria-live="polite">Pregunta 1 de 12</p>
+              <div class="quiz__bar" aria-hidden="true">
+                <span class="quiz__bar-fill" id="quizBar"></span>
+              </div>
+            </div>
+
+            <p class="quiz__question" id="quizQuestion"></p>
+
+            <fieldset class="quiz__options" id="quizOptions">
+              <legend class="visually-hidden" id="quizOptionsLegend">Opciones de respuesta</legend>
+            </fieldset>
+
+            <p class="quiz__feedback" id="quizFeedback" role="status" aria-live="polite"></p>
+
+            <div class="quiz__actions">
+              <button type="button" class="btn btn--ghost" id="quizPrevBtn" hidden>Anterior</button>
+              <button type="button" class="btn btn--primary" id="quizNextBtn">Siguiente</button>
+              <button type="button" class="btn btn--primary" id="quizFinishBtn" hidden>Ver resultado</button>
+            </div>
+          </div>
+
+          <!-- Panel de resultados -->
+          <div class="quiz__panel" id="quizResult" hidden>
+            <div class="quiz__score">
+              <p class="quiz__score-number" id="quizScore">0 / 12</p>
+              <p class="quiz__score-label" id="quizScoreLabel"></p>
+            </div>
+            <p class="quiz__result-text" id="quizResultText"></p>
+            <button type="button" class="btn btn--primary" id="quizRestartBtn">Reiniciar quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- Pie de página                                                -->
+  <!-- ============================================================ -->
+  <footer class="site-footer" id="footer">
+    <div class="container site-footer__inner">
+      <p class="site-footer__brand">
+        <img src="img/logo-institucion.jpeg" alt="Logo de la institución educativa" class="footer-logo" loading="lazy">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="22" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="22" cy="22" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M13 15 L19 11 M13 17 L19 21" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Sistemas Operativos de Red
+      </p>
+      <nav class="site-footer__nav" aria-label="Enlaces del pie de página">
+        <a href="#inicio">Inicio</a>
+        <a href="#conceptos">Conceptos</a>
+        <a href="#curricular">Curricular</a>
+        <a href="#tecnologias">Tecnologías</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#quiz">Quiz</a>
+      </nav>
+      <p class="site-footer__note">
+        Material educativo con fines de aprendizaje. Sin dependencias externas: HTML5, CSS3 y JavaScript vanilla.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================================ -->
+  <!-- Botón "volver arriba"                                        -->
+  <!-- ============================================================ -->
+  <button type="button" class="back-to-top" id="backToTop" aria-label="Volver arriba" hidden>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Script principal -->
+  <script src="js/script.js"></script>
+</body>
+</html>
